@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#ffffff" />
+  <meta name="description" content="지균💕영주 모바일 청첩장" />
+  <meta property="og:title" content="지균💕영주 결혼합니다" />
+  <meta property="og:description" content="2026년 8월 29일, 아펠가모 공덕" />
+  <meta property="og:image" content="./assets/images/og.jpg" />
+  <title>지균💕영주 결혼합니다</title>
+  <link rel="stylesheet" href="./style.css" />
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    rel="stylesheet"
+    as="style"
+    crossorigin
+    href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
+  />
+  <link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css"/>
+  <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=239d09eda1ed330ac100eb872a5ad1b7"></script>
+</head>
+<body>
+  <main class="wrap">
+    <!-- 1. HERO -->
+    <section class="hero">
+      <!-- 배경 이미지 -->
+      <img src="./assets/images/hero-bg.jpg" alt="" class="hero__bg">
+
+      <!-- 상단 영문 문구: 애니메이션 없음 -->
+      <img src="./assets/svg/hero-text.svg" alt="For all the days we have shared" class="hero__english-text">
+
+      <!-- 장식 오브젝트 -->
+      <div class="hero__objects" aria-hidden="true">
+        <!-- 등장만 하는 핑크 오브젝트 -->
+        <img src="./assets/svg/pink-flower.svg" class="hero-object object-flower">
+        <img src="./assets/svg/shooting-star.svg" class="hero-object object-shooting-star">
+        <img src="./assets/svg/pink-star.svg" class="hero-object object-pink-star">
+
+        <!-- 등장 후 반복해서 움직이는 흰색 하트 -->
+        <img src="./assets/svg/heart-01.svg" class="hero-object object-heart heart-01">
+        <img src="./assets/svg/heart-02.svg" class="hero-object object-heart heart-02">
+        <img src="./assets/svg/heart-03.svg" class="hero-object object-heart heart-03">
+
+        <!-- 등장 후 반복해서 반짝이는 흰색 오브젝트 -->
+        <img src="./assets/svg/sparkle-01.svg" class="hero-object object-sparkle sparkle-01">
+        <img src="./assets/svg/sparkle-02.svg" class="hero-object object-sparkle sparkle-02">
+        <img src="./assets/svg/plus.svg" class="hero-object object-sparkle object-plus">
+      </div>
+
+      <!-- 메인 타이틀 -->
+      <div class="hero__title">
+        <img src="./assets/svg/title-uri.svg" alt="우리" class="hero__title-img hero__title-uri">
+        <img src="./assets/svg/title-wedding.svg" alt="결혼합니다" class="hero__title-img hero__title-wedding">
+      </div>
+    </section>
+
+    <!-- 2. INVITED -->
+    <section class="sec intro">
+      <img class="sec-title" src="./assets/svg/title-invited.svg" alt="Invited" data-aos="fade-up" />
+      <p class="intro-text" data-aos="fade-up" data-aos-delay="200">
+        계획에 없던 행복도 함께였고,<br />
+        예상보다 더 큰 사랑도 함께였습니다.<br />
+        이제 저희는 새로운 시작을 맞이하려 합니다.<br />
+        소중한 날, 함께해 주시면 감사하겠습니다.
+      </p>
+      <div class="family" data-aos="fade-up" data-aos-delay="400">
+        <p>남광우 · 강애향<span>의 차남</span><b>지균</b></p>
+        <p>조만재<span>의 장녀</span><b>영주</b></p>
+      </div>
+    </section>
+
+    <!-- 3. PHOTO -->
+    <figure class="wide-photo">
+      <img src="./assets/images/couple.jpg" alt="사진" data-aos="fade" data-aos-delay="500"/>
+    </figure>
+
+    <!-- 4. CALENDAR -->
+    <section class="sec calendar">
+      <img class="calendar-img" src="./assets/images/calendar.png" alt="2026년 8월 달력, 8월 29일 토요일 오후 12시" data-aos="fade-up" data-aos-delay="200" />
+    </section>
+
+    <!-- 5. LOCATION -->
+    <section class="sec location">
+      <img class="sec-title" src="./assets/svg/title-location.svg" alt="Location" data-aos="fade-up" />
+      <h2 data-aos="fade-up" data-aos-delay="200">아펠가모 공덕 7층 라로브홀</h2>
+      <div class="address" data-aos="fade-up" data-aos-delay="400">
+        <p id="addressText">서울 마포구 마포대로 92 효성해링턴스퀘어 B동</p>
+        <button class="copy-btn" type="button" aria-label="주소 복사" onclick="copyAddress()"></button>
+      </div>
+      <div class="toast" id="toast">
+          주소가 복사되었습니다.
+      </div>
+
+      <!-- 카카오/네이버 지도 스크립트 또는 iframe으로 교체 -->
+      <div class="map" id="map">
+          <script>
+          var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
+              mapOption = { 
+                  center: new kakao.maps.LatLng(37.54230943449128,126.95248684801811), // 지도의 중심좌표
+                  level: 2 // 지도의 확대 레벨
+              };
+
+          var map = new kakao.maps.Map(mapContainer, mapOption);
+
+          // 마커가 표시될 위치입니다 
+          var markerPosition  = new kakao.maps.LatLng(37.54230943449128,126.95248684801811); 
+
+          // 마커를 생성합니다
+          var marker = new kakao.maps.Marker({
+              position: markerPosition
+          });
+
+          // 마커가 지도 위에 표시되도록 설정합니다
+          marker.setMap(map);
+
+          var iwContent = '<div style="margin-left:27px; padding:10px 0px;font-size:16px;">아펠가모 공덕',
+              iwPosition = new kakao.maps.LatLng(37.54230943449128,126.95248684801811); //인포윈도우 표시 위치입니다
+
+          // 인포윈도우를 생성합니다
+          var infowindow = new kakao.maps.InfoWindow({
+              position : iwPosition, 
+              content : iwContent 
+          });
+            
+          // 마커 위에 인포윈도우를 표시합니다. 두번째 파라미터인 marker를 넣어주지 않으면 지도 위에 표시됩니다
+          infowindow.open(map, marker); 
+        </script>
+      </div>
+
+      <div class="map-link">
+        <a href="https://map.kakao.com/?itemId=630786038" target="_blank" rel="noopener">카카오맵</a>
+        <a href="https://map.naver.com/p/entry/place/1929913788" target="_blank" rel="noopener">네이버지도</a>
+      </div>
+
+      <div class="guide">
+        <article class="guide-item">
+          <h3>지하철</h3>
+          <p><b class="line l5">5호선</b> 공덕역 7번 출구 도보 약 3분</p>
+          <p><b class="line l6">6호선</b> 공덕역 7번 출구 도보 약 3분</p>
+          <p><b class="line ac">공항철도</b> 공덕역 10번 출구 도보 약 1분</p>
+          <p><b class="line gj">경의중앙선</b> 공덕역 10번 출구 도보 약 1분</p>
+        </article>
+
+        <article class="guide-item">
+          <h3>버스</h3>
+          <p><b>간선</b> 160 · 260 · 600</p>
+          <p><b>지선</b> 7013A · 7013B · 7611</p>
+          <p><b>마을</b> 마포01 · 마포02 · 마포10</p>
+          <p><b>일반/공항</b> 1002 · 6015</p>
+        </article>
+
+        <article class="guide-item">
+          <h3>주차</h3>
+          <p><b>효성해링턴스퀘어 본 건물 주차</b> (하객 2시간 무료)</p>
+          <p>주차권은 로비, 화장실 앞, 연회장 앞 등 곳곳에 비치되어 있으니 꼭 챙겨주세요.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- 6. GALLERY -->
+    <section class="gallery">
+      <img class="sec-title" src="./assets/svg/title-gallery.svg" alt="Gallery" data-aos="fade-up"/>
+      <p class="sub-txt" data-aos="fade-up" data-aos-delay="200">사진을 클릭하시면 전체 화면 보기가 가능합니다.</p>
+      <div class="gallery-view">
+        <div class="gallery-track">
+          <button class="gallery-slide" type="button">
+            <img src="./assets/images/gallery-01.jpg" alt="웨딩 사진 1">
+          </button>
+          <button class="gallery-slide" type="button">
+            <img src="./assets/images/gallery-02.jpg" alt="웨딩 사진 2">
+          </button>
+          <button class="gallery-slide" type="button">
+            <img src="./assets/images/gallery-03.jpg" alt="웨딩 사진 3">
+          </button>
+          <button class="gallery-slide" type="button">
+            <img src="./assets/images/gallery-04.jpg" alt="웨딩 사진 4">
+          </button>
+          <button class="gallery-slide" type="button">
+            <img src="./assets/images/gallery-05.jpg" alt="웨딩 사진 5">
+          </button>
+          <button class="gallery-slide" type="button">
+            <img src="./assets/images/gallery-06.jpg" alt="웨딩 사진 6">
+          </button>
+          <button class="gallery-slide" type="button">
+            <img src="./assets/images/gallery-07.jpg" alt="웨딩 사진 7">
+          </button>
+          <button class="gallery-slide" type="button">
+            <img src="./assets/images/gallery-08.jpg" alt="웨딩 사진 8">
+          </button>
+          <button class="gallery-slide" type="button">
+            <img src="./assets/images/gallery-09.jpg" alt="웨딩 사진 9">
+          </button>
+          <button class="gallery-slide" type="button">
+            <img src="./assets/images/gallery-10.jpg" alt="웨딩 사진 10">
+          </button>
+          <button class="gallery-slide" type="button">
+            <img src="./assets/images/gallery-11.jpg" alt="웨딩 사진 11">
+          </button>
+          <button class="gallery-slide" type="button">
+            <img src="./assets/images/gallery-12.jpg" alt="웨딩 사진 12">
+          </button>
+          <button class="gallery-slide" type="button">
+            <img src="./assets/images/gallery-13.jpg" alt="웨딩 사진 13">
+          </button>
+          <button class="gallery-slide" type="button">
+            <img src="./assets/images/gallery-14.jpg" alt="웨딩 사진 14">
+          </button>
+          <button class="gallery-slide" type="button">
+            <img src="./assets/images/gallery-15.jpg" alt="웨딩 사진 15">
+          </button>          
+        </div>
+      </div>
+      <div class="gallery-dots" aria-label="갤러리 페이지"></div>
+    </section>
+
+    <!-- 7. ACCOUNT -->
+    <section class="account">
+      <div class="account-title">
+        <h2 data-aos="fade-up">마음 전하실 곳</h2>
+        <p data-aos="fade-up" data-aos-delay="200">
+          참석이 어려우신 분들을 위해 기재하였습니다<br>
+          너그러운 마음으로 양해 부탁드립니다
+        </p>
+      </div>
+      <div class="account-wrap" data-aos="fade-up" data-aos-delay="400">
+        <!-- 신랑측 -->
+        <div class="account-item">
+          <button class="account-head" type="button">
+            <span>신랑측</span>
+            <span class="account-arrow"></span>
+          </button>
+          <div class="account-body">
+            <div class="account-list">
+              <div class="account-card">
+                <div class="account-info">
+                  <strong>혼주 강애향</strong>
+                  <p>카카오뱅크&nbsp;&nbsp;3333-09-2453190</p>
+                </div>
+                <button
+                  class="account-copy"
+                  type="button"
+                  data-copy="3333092453190"
+                  aria-label="계좌번호 복사">
+                </button>
+              </div>
+              <div class="account-card">
+                <div class="account-info">
+                  <strong>신랑 남지균</strong>
+                  <p>카카오뱅크&nbsp;&nbsp;3333-08-1776713</p>
+                </div>
+                <button
+                  class="account-copy"
+                  type="button"
+                  data-copy="3333081776713"
+                  aria-label="계좌번호 복사">
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 신부측 -->
+        <div class="account-item">
+          <button class="account-head" type="button">
+            <span>신부측</span>
+            <span class="account-arrow"></span>
+          </button>
+          <div class="account-body">
+            <div class="account-list">
+              <div class="account-card">
+                <div class="account-info">
+                  <strong>혼주 조만재</strong>
+                  <p>신한은행&nbsp;&nbsp;110-333-006413</p>
+                </div>
+                <button
+                  class="account-copy"
+                  type="button"
+                  data-copy="110333006413"
+                  aria-label="계좌번호 복사">
+                </button>
+              </div>
+
+              <div class="account-card">
+                <div class="account-info">
+                  <strong>신부 조영주</strong>
+                  <p>신한은행&nbsp;&nbsp;110-533-039925</p>
+                </div>
+                <button
+                  class="account-copy"
+                  type="button"
+                  data-copy="110533039925"
+                  aria-label="계좌번호 복사">
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <div class="toast" id="accountToast">
+        계좌번호가 복사되었습니다.
+    </div>
+
+    <!-- 8. INFORMATION -->
+    <section class="sec info">
+      <img class="sec-title" src="./assets/svg/title-information.svg" alt="Information" data-aos="fade-up" />
+      <p data-aos="fade-up" data-aos-delay="200">예식장 규정상 축하 화환은 정중히 사양합니다. <br />따뜻한 마음만 감사히 받겠습니다.</p>
+    </section>
+
+    <!-- 9. FOOTER -->
+    <footer class="footer">
+      <img class="sec-title" src="./assets/svg/footer-heart.svg" alt="" aria-hidden="true" data-aos="fade-down"/>
+      <p class="names" data-aos="fade-up" data-aos-delay="200">JIKYUN &amp; YOUNGJU<br />2026.08.29, PM4:00</p>
+      <img class="heart" src="./assets/svg/heart_icon.svg" alt="" aria-hidden="true" />
+      <small>© 2026 Nam Jikyun & Jo Youngju<br/>Released under the MIT License</small>
+    </footer>
+  </main>
+
+  <div class="toast" role="status" aria-live="polite">계좌번호를 복사했어요.</div>
+  <script src="./script.js"></script>
+  <div class="gallery-modal" aria-hidden="true">
+    <button
+        class="modal-close"
+        type="button"
+        aria-label="전체화면 닫기">
+    </button>
+
+    <div class="modal-image-wrap">
+        <img class="modal-image" src="" alt="">
+    </div>
+
+    <div class="modal-control">
+        <button
+            class="modal-prev"
+            type="button"
+            aria-label="이전 사진">
+        </button>
+
+        <span class="modal-count">
+            <span class="modal-current">1</span>
+            <span>/</span>
+            <span class="modal-total">1</span>
+        </span>
+
+        <button
+            class="modal-next"
+            type="button"
+            aria-label="다음 사진">
+        </button>
+    </div>
+</div>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+  AOS.init({
+    duration: 800,
+    easing: 'ease-out-cubic',
+    once: true,
+    offset: 80
+  });
+</script>
+</body>
+</html>
