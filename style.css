@@ -36,7 +36,6 @@ body {
     background: #ececec;
     font-family: Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
     word-break: keep-all;
-    overscroll-behavior-y:none;
 }
 
 img {
@@ -727,14 +726,6 @@ a {
     touch-action:none;
     user-select:none;
     cursor:grab;
-}
-
-.gallery-view,
-.gallery-track,
-.gallery-slide,
-.gallery-slide img{
-    touch-action:none;
-    overscroll-behavior:none;
 }
 
 .gallery-track.dragging{
