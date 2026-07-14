@@ -120,21 +120,14 @@ document.addEventListener("DOMContentLoaded", () => {
     /* 갤러리 드래그 중 */
     track.addEventListener("pointermove", (event) => {
         if (!dragging) return;
-
+    
         dragEndX = event.clientX;
-
+    
         const distance = dragEndX - dragStartX;
-
-        if (Math.abs(distance) > 10) {
+    
+        if (Math.abs(distance) > 15) {
             wasDragged = true;
         }
-
-        if (!wasDragged) return;
-
-        const width = track.parentElement.clientWidth;
-
-        track.style.transform =
-            `translateX(${-(index * width) + distance}px)`;
     });
 
     /* 갤러리 드래그 종료 */
@@ -149,9 +142,9 @@ document.addEventListener("DOMContentLoaded", () => {
         const distance = dragEndX - dragStartX;
 
         if (wasDragged) {
-            if (distance < -50 && index < slides.length - 1) {
+            if (distance < -70 && index < slides.length - 1) {
                 index++;
-            } else if (distance > 50 && index > 0) {
+            } else if (distance > 70 && index > 0) {
                 index--;
             }
         }
