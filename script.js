@@ -2,9 +2,13 @@
 
 // 갤러리 슬라이드
 document.addEventListener("DOMContentLoaded", () => {
-    const track = document.querySelector(".gallery-track");
-    const slides = [...document.querySelectorAll(".gallery-slide")];
-    const dotsWrap = document.querySelector(".gallery-dots");
+    const grid = document.querySelector(".gallery-grid");
+    const items = [
+        ...document.querySelectorAll(".gallery-item")
+    ];
+
+    const toggleBtn = document.querySelector(".gallery-toggle");
+    const toggleText = document.querySelector(".gallery-toggle-text");
 
     const modal = document.querySelector(".gallery-modal");
     const modalImg = document.querySelector(".modal-image");
@@ -14,163 +18,63 @@ document.addEventListener("DOMContentLoaded", () => {
     const currentNum = document.querySelector(".modal-current");
     const totalNum = document.querySelector(".modal-total");
 
-    if (!track || !slides.length || !dotsWrap) {
-        console.error("갤러리 HTML 구조를 확인필요");
-        return;
-    }
-
     if (
+        !grid ||
+        !items.length ||
+        !toggleBtn ||
         !modal ||
-        !modalImg ||
-        !closeBtn ||
-        !prevBtn ||
-        !nextBtn ||
-        !currentNum ||
-        !totalNum
+        !modalImg
     ) {
-        console.error("갤러리 모달 HTML 또는 클래스명을 확인필요");
         return;
     }
 
-    let index = 0;
-    let modalIndex = 0;
+    let currentIndex = 0;
+    let modalStartX = 0;
 
-    let dragStartX = 0;
-    let dragEndX = 0;
-    let dragging = false;
-    let wasDragged = false;
+    totalNum.textContent = items.length;
 
-    const dotCount = Math.min(5, slides.length);
-    const dots = [];
 
-    totalNum.textContent = slides.length;
+    /* =========================
+       더보기 / 접기
+    ========================= */
 
-    /* 도트 생성 */
-    for (let i = 0; i < dotCount; i++) {
-        const dot = document.createElement("button");
+    toggleBtn.addEventListener("click", () => {
+        const isOpen = grid.classList.toggle("open");
 
-        dot.type = "button";
-        dot.className = "gallery-dot";
+        toggleBtn.classList.toggle("open", isOpen);
 
-        dot.addEventListener("click", () => {
-            const target = Number(dot.dataset.index);
+        toggleText.textContent =
+            isOpen ? "접기" : "더보기";
 
-            if (!Number.isNaN(target)) {
-                index = target;
-                updateGallery();
-            }
+        if (!isOpen) {
+            grid.scrollIntoView({
+                behavior:"smooth",
+                block:"start"
+            });
+        }
+    });
+
+
+    /* =========================
+       모달 열기
+    ========================= */
+
+    items.forEach((item, index) => {
+        item.addEventListener("click", () => {
+            currentIndex = index;
+            openModal();
         });
-
-        dotsWrap.appendChild(dot);
-        dots.push(dot);
-    }
-
-    /* 갤러리 위치 업데이트 */
-    function updateGallery() {
-        track.style.transform = `translateX(-${index * 100}%)`;
-        updateDots();
-    }
-
-    /* 도트 업데이트 */
-    function updateDots() {
-        const maxStart = Math.max(0, slides.length - dotCount);
-
-        const start = Math.min(
-            Math.max(index - 2, 0),
-            maxStart
-        );
-
-        dots.forEach((dot, dotIndex) => {
-            const realIndex = start + dotIndex;
-
-            dot.dataset.index = realIndex;
-
-            dot.setAttribute(
-                "aria-label",
-                `${realIndex + 1}번째 사진 보기`
-            );
-
-            dot.classList.remove("active", "pop");
-        });
-
-        const activeDot = dots.find(
-            (dot) => Number(dot.dataset.index) === index
-        );
-
-        if (activeDot) {
-            activeDot.classList.add("active");
-
-            void activeDot.offsetWidth;
-
-            activeDot.classList.add("pop");
-        }
-    }
-
-    /* 갤러리 드래그 시작 */
-    track.addEventListener("pointerdown", (event) => {
-        dragging = true;
-        wasDragged = false;
-
-        dragStartX = event.clientX;
-        dragEndX = event.clientX;
-
-        track.classList.add("dragging");
     });
 
-    /* 갤러리 드래그 중 */
-    track.addEventListener("pointermove", (event) => {
-        if (!dragging) return;
-    
-        dragEndX = event.clientX;
-    
-        const distance = dragEndX - dragStartX;
-    
-        if (Math.abs(distance) > 15) {
-            wasDragged = true;
-        }
-    });
-
-    /* 갤러리 드래그 종료 */
-    function endDrag(event) {
-        if (!dragging) return;
-
-        dragging = false;
-        track.classList.remove("dragging");
-
-        dragEndX = event.clientX;
-
-        const distance = dragEndX - dragStartX;
-
-        if (wasDragged) {
-            if (distance < -70 && index < slides.length - 1) {
-                index++;
-            } else if (distance > 70 && index > 0) {
-                index--;
-            }
-        }
-
-        updateGallery();
-    }
-
-    track.addEventListener("pointerup", endDrag);
-    track.addEventListener("pointercancel", endDrag);
-    track.addEventListener("pointerleave", (event) => {
-        if (dragging) {
-            endDrag(event);
-        }
-    });
-
-    /* 모달 열기 */
-    function openModal(slideIndex) {
-        modalIndex = slideIndex;
-
-        const image = slides[modalIndex].querySelector("img");
+    function openModal() {
+        const image = items[currentIndex].querySelector("img");
 
         if (!image) return;
 
         modalImg.src = image.src;
         modalImg.alt = image.alt || "";
-        currentNum.textContent = modalIndex + 1;
+
+        currentNum.textContent = currentIndex + 1;
 
         modalImg.classList.remove("fade-out");
         modalImg.classList.add("show");
@@ -181,106 +85,119 @@ document.addEventListener("DOMContentLoaded", () => {
         document.body.classList.add("modal-open");
     }
 
-    /* 이미지 클릭 */
-    slides.forEach((slide, slideIndex) => {
-        slide.addEventListener("click", (event) => {
-            event.preventDefault();
 
-            if (wasDragged) {
-                wasDragged = false;
-                return;
-            }
+    /* =========================
+       이미지 변경
+    ========================= */
 
-            openModal(slideIndex);
-        });
-    });
-
-    /* 모달 닫기 */
-    function closeModal() {
-        modal.classList.remove("open");
-        modal.setAttribute("aria-hidden", "true");
-
-        document.body.classList.remove("modal-open");
-
-        modalImg.classList.remove(
-            "show",
-            "fade-out"
-        );
-    }
-
-    closeBtn.addEventListener("click", closeModal);
-
-    /* 모달 이미지 페이드 전환 */
-    function changeModalImage() {
+    function changeImage() {
         modalImg.classList.remove("show");
         modalImg.classList.add("fade-out");
 
         window.setTimeout(() => {
             const image =
-                slides[modalIndex].querySelector("img");
+                items[currentIndex].querySelector("img");
 
             if (!image) return;
 
             modalImg.src = image.src;
             modalImg.alt = image.alt || "";
-            currentNum.textContent = modalIndex + 1;
+
+            currentNum.textContent = currentIndex + 1;
 
             modalImg.classList.remove("fade-out");
 
             requestAnimationFrame(() => {
                 modalImg.classList.add("show");
             });
-        }, 180);
+        }, 160);
     }
 
-    /* 이전 이미지 */
+
+    /* 이전 사진 */
+
     prevBtn.addEventListener("click", () => {
-        modalIndex =
-            modalIndex === 0
-                ? slides.length - 1
-                : modalIndex - 1;
+        currentIndex =
+            currentIndex === 0
+                ? items.length - 1
+                : currentIndex - 1;
 
-        changeModalImage();
+        changeImage();
     });
 
-    /* 다음 이미지 */
+
+    /* 다음 사진 */
+
     nextBtn.addEventListener("click", () => {
-        modalIndex =
-            modalIndex === slides.length - 1
+        currentIndex =
+            currentIndex === items.length - 1
                 ? 0
-                : modalIndex + 1;
+                : currentIndex + 1;
 
-        changeModalImage();
+        changeImage();
     });
 
-    /* 모달 스와이프 */
-    let modalStartX = 0;
-    let modalEndX = 0;
 
-    modalImg.addEventListener("pointerdown", (event) => {
-        modalStartX = event.clientX;
-        modalEndX = event.clientX;
+    /* =========================
+       모달 닫기
+    ========================= */
+
+    function closeModal() {
+        modal.classList.remove("open");
+        modal.setAttribute("aria-hidden", "true");
+
+        modalImg.classList.remove(
+            "show",
+            "fade-out"
+        );
+
+        document.body.classList.remove("modal-open");
+    }
+
+    closeBtn.addEventListener("click", closeModal);
+
+
+    /* 모달 바깥 클릭 시 닫기 */
+
+    modal.addEventListener("click", (event) => {
+        if (event.target === modal) {
+            closeModal();
+        }
     });
 
-    modalImg.addEventListener("pointermove", (event) => {
-        modalEndX = event.clientX;
-    });
 
-    modalImg.addEventListener("pointerup", (event) => {
-        modalEndX = event.clientX;
+    /* =========================
+       모바일 스와이프
+    ========================= */
 
-        const distance = modalEndX - modalStartX;
+    modalImg.addEventListener("touchstart", (event) => {
+        modalStartX =
+            event.changedTouches[0].clientX;
+    }, { passive:true });
+
+    modalImg.addEventListener("touchend", (event) => {
+        const modalEndX =
+            event.changedTouches[0].clientX;
+
+        const distance =
+            modalEndX - modalStartX;
 
         if (distance < -50) {
             nextBtn.click();
         } else if (distance > 50) {
             prevBtn.click();
         }
-    });
+    }, { passive:true });
 
-    /* 키보드 */
+
+    /* =========================
+       키보드
+    ========================= */
+
     document.addEventListener("keydown", (event) => {
-        if (!modal.classList.contains("open")) return;
+        if (!modal.classList.contains("open")) {
+            return;
+        }
 
         if (event.key === "Escape") {
             closeModal();
@@ -294,10 +211,7 @@ document.addEventListener("DOMContentLoaded", () => {
             nextBtn.click();
         }
     });
-
-    updateGallery();
 });
-
 
 // 신랑측 / 신부측 탭
 const tabs = [...document.querySelectorAll('.tab')];
