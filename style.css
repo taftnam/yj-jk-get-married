@@ -714,105 +714,104 @@ a {
     color: #777;
 }
 
-.gallery-view{
+.gallery-grid {
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:2px;
     width:100%;
-    overflow:hidden;
 }
 
-.gallery-track{
-    display:flex;
-    width:100%;
-    transition:transform .45s cubic-bezier(.22,1,.36,1);
-    touch-action:pan-y;
-    user-select:none;
-    cursor:grab;
-}
-
-.gallery-track.dragging{
-    transition:none;
-    cursor:grabbing;
-}
-
-
-/* 갤러리 이미지*/
-.gallery-slide {
+.gallery-item {
+    position:relative;
     display:block;
     width:100%;
-    min-width:100%;
-    flex:0 0 100%;
-    padding:0 24px;
+    aspect-ratio:1 / 1;
+    padding:0;
+    overflow:hidden;
     border:0;
-    background:none;
+    background:#eee;
     cursor:pointer;
 }
 
-.gallery-slide img {
+.gallery-item img {
     display:block;
     width:100%;
-    height:480px;
+    height:100%;
     object-fit:cover;
     object-position:center;
-    border-radius:18px;
     pointer-events:none;
     user-select:none;
     -webkit-user-drag:none;
-}
-
-.gallery-dots {
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    gap:8px;
-    margin-top:24px;
-}
-
-.gallery-dot {
-    width:6px;
-    height:6px;
-    padding:0;
-    border:0;
-    border-radius:50%;
-    background:#e1b9c5;
-    cursor:pointer;
-    transform:scale(1);
     transition:
-        transform .3s cubic-bezier(.22,1,.36,1),
-        background-color .3s ease,
-        opacity .3s ease;
+        transform .35s ease,
+        opacity .25s ease;
 }
 
-.gallery-dot.active {
-    background:#a8546d;
-    transform:scale(1.5);
+.gallery-item:active img {
+    transform:scale(.98);
+    opacity:.85;
 }
 
-.gallery-dot.pop {
-    animation:dot-pop .3s cubic-bezier(.22,1,.36,1);
+/* 처음에는 10~15번 숨김 */
+.gallery-more {
+    display:none;
 }
 
-@keyframes dot-pop{
-    0%{
-        transform:scale(1);
+.gallery-grid.open .gallery-more {
+    display:block;
+    animation:gallery-show .35s ease both;
+}
+
+@keyframes gallery-show {
+    from{
+        opacity:0;
+        transform:translateY(8px);
     }
 
-    65%{
-        transform:scale(1.7);
-    }
-
-    100%{
-        transform:scale(1.5);
+    to{
+        opacity:1;
+        transform:translateY(0);
     }
 }
 
+/* 더보기 버튼*/
+.gallery-toggle {
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    width:100%;
+    padding:34px 0 8px;
+    border:0;
+    background:#fff;
+    color:#555;
+    font-size:15px;
+    cursor:pointer;
+}
 
-/* =전체화면 모달= */
+.gallery-toggle-arrow {
+    width:12px;
+    height:12px;
+    border-right:1.5px solid #777;
+    border-bottom:1.5px solid #777;
+    transform:rotate(45deg);
+    transition:transform .3s ease;
+}
 
+.gallery-toggle.open .gallery-toggle-arrow {
+    transform:rotate(225deg);
+}
+
+.gallery-toggle:active {
+    opacity:.65;
+}
+
+/* 전체화면 모달 */
 .gallery-modal {
     position:fixed;
     inset:0;
     z-index:9999;
-    display:flex;
-    flex-direction:column;
     width:100%;
     height:100%;
     background:#fff;
@@ -830,13 +829,24 @@ a {
     pointer-events:auto;
 }
 
-.modal-close{
+.modal-inner {
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    width:min(100%, 560px);
+    height:100%;
+    margin:0 auto;
+    background:#fff;
+}
+
+/* 닫기 버튼 */
+.modal-close {
     position:absolute;
-    top:18px;
-    right:18px;
-    z-index:10;
-    width:40px;
-    height:40px;
+    top:16px;
+    right:16px;
+    z-index:5;
+    width:42px;
+    height:42px;
     padding:0;
     border:0;
     background:transparent;
@@ -846,12 +856,12 @@ a {
 .modal-close::before, .modal-close::after {
     content:"";
     position:absolute;
-    left:19px;
-    top:9px;
+    top:10px;
+    left:20px;
     width:1.5px;
     height:22px;
     border-radius:999px;
-    background:#aaa;
+    background:#999;
 }
 
 .modal-close::before {
@@ -862,15 +872,16 @@ a {
     transform:rotate(-45deg);
 }
 
-/* 모달 이미지 영역*/
+/* 이미지 영역 */
 .modal-image-wrap {
     flex:1;
     min-height:0;
     display:flex;
-    justify-content:center;
     align-items:center;
-    padding:64px 0 0;
+    justify-content:center;
+    padding:70px 0 0;
     overflow:hidden;
+    background:#fff;
 }
 
 .modal-image {
@@ -880,7 +891,9 @@ a {
     object-fit:contain;
     object-position:center;
     opacity:0;
-    transition:opacity .28s ease;
+    user-select:none;
+    -webkit-user-drag:none;
+    transition:opacity .25s ease;
 }
 
 .modal-image.show {
@@ -891,33 +904,31 @@ a {
     opacity:0;
 }
 
+/* 하단 컨트롤 */
 .modal-control {
-    width:min(100%, 540px);
-    height:100px;
+    width:100%;
+    height:94px;
     flex-shrink:0;
     display:flex;
-    align-items:flex-start;
+    align-items:center;
     justify-content:space-between;
-    background:#fff;
-    margin:0 auto;
     padding:0 12px;
+    background:#fff;
 }
-
 
 .modal-count {
     display:flex;
     align-items:center;
     gap:6px;
-    color:#777;
+    color:#6f6f6f;
     font-size:14px;
-    font-weight:400;
-    margin-top: 14px;    
 }
 
+/* 이전·다음 버튼 */
 .modal-prev, .modal-next {
     position:relative;
-    width:44px;
-    height:44px;
+    width:48px;
+    height:48px;
     padding:0;
     border:0;
     background:transparent;
@@ -927,49 +938,47 @@ a {
 .modal-prev::before, .modal-next::before {
     content:"";
     position:absolute;
-    top:15px;
-    width:11px;
-    height:11px;
+    top:16px;
+    width:12px;
+    height:12px;
 }
 
 .modal-prev::before {
-    left:17px;
-    border-left:1.5px solid #aaa;
-    border-bottom:1.5px solid #aaa;
+    left:19px;
+    border-left:1.5px solid #999;
+    border-bottom:1.5px solid #999;
     transform:rotate(45deg);
 }
 
 .modal-next::before {
-    right:17px;
-    border-right:1.5px solid #aaa;
-    border-top:1.5px solid #aaa;
+    right:19px;
+    border-right:1.5px solid #999;
+    border-top:1.5px solid #999;
     transform:rotate(45deg);
 }
 
-/* 버튼 눌림 효과 */
 .modal-close:active, .modal-prev:active, .modal-next:active {
     transform:scale(.9);
 }
 
-/* 모달 열렸을 때 스크롤 방지 */
+/* 모달 열릴 때 본문 스크롤 차단 */
 body.modal-open {
     overflow:hidden;
 }
 
-/* 작은 모바일 대응 */
+/* 작은 모바일 */
 @media (max-width:380px){
-
-    .gallery-slide{
-        padding:0 24px;
+    .gallery{
+        padding-top:64px;
     }
 
-    .gallery-slide img{
-        height:440px;
+    .gallery-desc{
+        margin-bottom:34px;
+        font-size:13px;
     }
 
     .modal-control{
-        height:88px;
-        padding:0 12px;
+        height:86px;
     }
 }
 
